@@ -149,7 +149,7 @@
                           <el-input placeholder :value="tmp.gdzjhm" disabled></el-input>
                         </el-form-item>
                       </li>
-                      <li>
+                      <li v-if="false">
                         <el-form-item label="持股比例">
                           <el-input placeholder="请输入股东持股比例" :value="tmp.cze" disabled></el-input>
                         </el-form-item>
@@ -297,6 +297,7 @@ export default {
       msgCorp: {}, //公司信息
       params: {
         swMId: "", //税务主表主键
+        bkMId: "", //税务公司主键
         Authorization: "" //Token
       },
       gdInfo: [], //股东
@@ -328,6 +329,9 @@ export default {
       this.params.swMId = this.msgCorp.swMId
         ? this.msgCorp.swMId
         : this.msgCorp.swMainInfo.swMId;
+      this.params.bkMId = this.msgCorp.bkMId
+        ? this.msgCorp.bkMId
+        : this.msgCorp.swMainInfo.bkMId;
       this.params.Authorization = this.$store.state.token;
       //初始化单个公司税务相关所有数据
       this.getSwDataAllBySwMId();
@@ -366,8 +370,7 @@ export default {
     submit() {
       this.fullscreenLoading = true;
       API.swApi_save({
-        bkMId: this.msgCorp.bkMId,
-        swMId: this.params.swMId,
+        bkMId: this.params.bkMId,
         Authorization: this.params.Authorization
       })
         .then(res => {

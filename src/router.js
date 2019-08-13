@@ -6,8 +6,13 @@ Vue.use(Router);
 
 const router = new Router({
   mode: 'history',
-  base:"/dist",
+  base: "/dist",
   routes: [
+    {
+      path: '*',
+      name: "notFound",
+      component: () => import("./views/notFound.vue")
+    },
     {
       path: "/",
       name: "loginOne",
@@ -103,7 +108,7 @@ const router = new Router({
 const permitList = ["loginOne", "loginTwo"];//白名单
 router.beforeEach((to, from, next) => {
   //console.log(Store.state)
-  
+
   if (Store.state.isFlag) {
     if (permitList.indexOf(to.name) == -1) {
       next()

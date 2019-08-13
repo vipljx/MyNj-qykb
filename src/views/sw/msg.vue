@@ -85,7 +85,7 @@
                     <ul class="msg-middle-li-ul" v-for="(tmp,i) in gdInfo" :key="i">
                       <li>姓名：{{tmp.gdmc}}</li>
                       <li>证件号：{{tmp.gdzjhm}}</li>
-                      <li>持股比例：{{tmp.cze}}</li>
+                      <li v-if="false">持股比例：{{tmp.cze}}</li>
                       <li v-if="false">住址：南京市浦口区</li>
                     </ul>
                   </li>

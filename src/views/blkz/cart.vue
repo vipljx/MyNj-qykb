@@ -13,7 +13,7 @@
               <ul class="msg-top-ul">
                 <li>公司名称：{{msgCorp.bkCompanyName?msgCorp.bkCompanyName:msgCorp.mcompanyName}}</li>
                 <li>经办人：{{msgCorp.mFrName?msgCorp.mFrName:msgCorp.mfrName}}</li>
-                <li>经办人联系电话：暂无</li>
+                <li>经办人联系电话：{{params.userPhone}}</li>
               </ul>
             </li>
             <li class="cartB-li">
@@ -39,7 +39,7 @@
                 <th>印章类型</th>
                 <th>印章材质</th>
                 <th>数量</th>
-                <th>金额</th>
+                <th>单价</th>
               </thead>
               <tbody>
                 <tr v-for="(tmpA,i) in msgShop.kzChapterInfoList" :key="tmpA.kzChapterId">

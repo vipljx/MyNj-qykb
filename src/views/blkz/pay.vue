@@ -46,7 +46,7 @@
               <ul class="msg-top-ul">
                 <li>公司名称：{{msgCorp.bkCompanyName?msgCorp.bkCompanyName:msgCorp.mcompanyName}}</li>
                 <li>经办人：{{msgCorp.mFrName?msgCorp.mFrName:msgCorp.mfrName}}</li>
-                <li>经办人联系电话：暂无</li>
+                <li>经办人联系电话：{{phone}}</li>
               </ul>
             </li>
             <li class="cartB-li">
@@ -73,7 +73,7 @@
                 <th>印章类型</th>
                 <th>印章材质</th>
                 <th>数量</th>
-                <th>金额</th>
+                <th>单价</th>
               </thead>
               <tbody>
                 <tr v-for="tmp in orderMainInfo.kzOrderMainDetailList" :key="tmp.kzChapterId">
@@ -373,6 +373,7 @@ export default {
       orderMainInfo: {}, //订单详细
       kzOrderMainDetailList: [], //订单列表
       LogisticsList: [], //物流列表
+
       //更新支付状态
       params1: {
         kzActPayImg: "",
@@ -397,6 +398,9 @@ export default {
     "v-Cate": cate
   },
   computed: {
+    phone(){
+      return this.$store.state.phone
+    },
     count: function() {
       var cont = 0;
       for (var tmp of this.kzOrderMainDetailList) {
@@ -465,14 +469,14 @@ export default {
           //console.log(res.data.orderMainInfo);
           if (res.code === 0) {
             //公司店铺信息
-            res.data.companyInfo.kzPayImg =
-              config.baseUrl +
-              "/common/api/download?downloadPath=" +
-              res.data.companyInfo.kzPayImg;
-            res.data.companyInfo.kzWechatImg =
-              config.baseUrl +
-              "/common/api/download?downloadPath=" +
-              res.data.companyInfo.kzWechatImg;
+            // res.data.companyInfo.kzPayImg =
+            //   config.baseUrl +
+            //   "/common/api/download?downloadPath=" +
+            //   res.data.companyInfo.kzPayImg;
+            // res.data.companyInfo.kzWechatImg =
+            //   config.baseUrl +
+            //   "/common/api/download?downloadPath=" +
+            //   res.data.companyInfo.kzWechatImg;
             this.companyInfo = res.data.companyInfo;
 
             //订单信息
