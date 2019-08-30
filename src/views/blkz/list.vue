@@ -49,7 +49,7 @@
           </ul>
           
           <div class="page" v-if="list.length!==0">
-            <v-Page @parentPage="onPage" :total="total"></v-Page>
+            <v-Page @parentPage="onPage" :total="total" :currentPage="params.pageNo"></v-Page>
           </div>
           <div class="height10"></div>
          
@@ -153,6 +153,7 @@ export default {
     },
     //筛选属性
     onScreen(i) {
+      this.params.pageNo = 1;
       if (i === 0) {
         this.params.saleOrder = false;
         this.params.talkOrder = false;
@@ -170,6 +171,7 @@ export default {
     },
     //筛选地区
     onArea(addrId) {
+      this.params.pageNo = 1;
       this.params.kzDzArea = addrId;
       this.getKzCompanyData();
     },

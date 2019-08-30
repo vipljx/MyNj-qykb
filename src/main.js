@@ -1,10 +1,15 @@
+
+//引入 polyfill
+import '@babel/polyfill';
+import Es6Promise from 'es6-promise'
+Es6Promise.polyfill()
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store/index";
 
 //引入css
-import "../src/assets/css/css.css" 
+import "./assets/css/css.css" 
 
 //引入axios，并加到原型链中
 import axios from "axios";
@@ -16,6 +21,8 @@ Vue.prototype.qs = QS;
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 Vue.use(ElementUI);
+
+
 
 
 //路由守卫

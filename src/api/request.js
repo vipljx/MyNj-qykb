@@ -2,6 +2,8 @@
 import axios from 'axios'
 import qs from 'qs'
 import config from './config'
+import store from '../store/index'
+import router from '../router'
 
 const baseUrl = config.baseUrl
 
@@ -11,37 +13,39 @@ axios.defaults.baseURL = baseUrl;   //配置接口地址
 
 //POST传参序列化(添加请求拦截器)
 axios.interceptors.request.use((config) => {
-    //console.log(config)
+    if (store.state.token) {
+        config.headers.Authorization = store.state.token
+    }
     //在发送请求之前做某件事
     if (config.method === 'post') {
         config.data = qs.stringify(config.data);
     }
     return config;
 }, (error) => {
-    console.log('错误的传参')
+    //console.log('错误的传参')
     return Promise.reject(error);
 });
 
 //返回状态判断(添加响应拦截器)
 axios.interceptors.response.use((res) => {
+    //console.log(!res.data.success)
     //对响应数据做些事
-    if (!res.data.success) {
-        return Promise.resolve(res);
-    }
-    return res;
+    return Promise.resolve(res);
+
 }, (error) => {
+    console.log(error.response)
     if (error && error.response) {
-        switch (error.response.status) {
-          case 401:
-            // location.reload()
-            return
-          
+        if (error.response.status == 401 && error.response.data.code == 1000101) {
+            store.commit("delUser");
+            router.push({
+                name: "loginOne"
+            })
         }
         // 请求错误处理
         return Promise.reject(error)
-      } else {
+    } else {
         return Promise.reject(error)
-      }
+    }
 });
 
 //返回一个Promise(发送post请求)
@@ -53,10 +57,12 @@ export function fetchPost(url, params) {
             data: params
         })
             .then(res => {
+                //console.log(1)
                 //成功
                 resolve(res.data)
             })
             .catch(res => {
+                //console.log(22)
                 //失败
                 reject(res)
             })

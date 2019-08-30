@@ -45,7 +45,7 @@
                     <div
                       class="msg-bottom-li-ul-li-note"
                       v-show="tmpA.date"
-                    >({{tmpA.name}} {{tmpA.date}})</div>
+                    >({{tmpA.name?tmpA.name+" ":""}}{{tmpA.date}})</div>
                   </li>
                 </ul>
               </li>
@@ -71,7 +71,7 @@
                     <div
                       class="msg-bottom-li-ul-li-note"
                       v-show="tmpA.date"
-                    >({{tmpA.name}} {{tmpA.date}})</div>
+                    >({{tmpA.name?tmpA.name+" ":""}}{{tmpA.date}})</div>
                   </li>
                 </ul>
               </li>
@@ -97,7 +97,7 @@
                     <div
                       class="msg-bottom-li-ul-li-note"
                       v-show="tmpA.date"
-                    >({{tmpA.name}} {{tmpA.date}})</div>
+                    >({{tmpA.name?tmpA.name+" ":""}}{{tmpA.date}})</div>
                   </li>
                 </ul>
               </li>
@@ -123,7 +123,7 @@
                     <div
                       class="msg-bottom-li-ul-li-note"
                       v-show="tmpA.date"
-                    >({{tmpA.name}} {{tmpA.date}})</div>
+                    >({{tmpA.name?tmpA.name+" ":""}}{{tmpA.date}})</div>
                   </li>
                 </ul>
               </li>
@@ -327,8 +327,8 @@ export default {
             //工商办理进度
             var company = res.data.company;
             if (company) {
-              this.process1[0].date = company.slrq;
-              this.process1[1].date = company.clsj;
+              this.process1[0].date = company.slrq ? this.formatDate(company.slrq.replace(/-/g, '/')) :"";
+              this.process1[1].date = company.clsj ? this.formatDate(company.clsj.replace(/-/g, '/')) :"";
             }
             //刻章办理进度
             var kz = res.data.kz;
@@ -402,10 +402,13 @@ export default {
                   this.process4[k].isSucess = false;
                 }
               }
-              this.process4[0].name = sw.swYlOne.split("/")[0];
-              this.process4[0].date = sw.swYlOne.split("/")[1]
-                ? this.formatDate(sw.swYlOne.split("/")[1])
-                : "";
+              console.log(sw.swYlOne)
+              if (sw.swYlOne) {
+                this.process4[0].name = sw.swYlOne.split("/")[0];
+                this.process4[0].date = sw.swYlOne.split("/")[1]
+                  ? this.formatDate(new Date(sw.swYlOne.split("/")[1].replace(/-/g, '/')).getTime())
+                  : "";
+              }
 
               this.process4[2].date = sw.swYlThree
                 ? this.formatDate(sw.swYlThree)
@@ -429,10 +432,8 @@ export default {
             message: "请先提交申请银行业务！",
             type: "warning"
           });
-
           return;
         }
-
         this.$router.push({
           path: url
         });
@@ -442,14 +443,13 @@ export default {
           path: url
         });
       }
-      if (i === 1) {
-        storage.set("msgShop", this.msgShop);
-      } else if (i === 2) {
-        storage.set("msgBank", this.msgBank);
-      }
+      storage.set("msgShop", this.msgShop);
+      storage.set("msgBank", this.msgBank);
     },
     //时间戳转为日期格式
     formatDate(now) {
+      //console.log(now)
+      //console.log(typeof(now))
       now = new Date(now);
       var year = now.getFullYear();
       var month = now.getMonth() + 1;

@@ -14,10 +14,9 @@
 export default {
   data() {
     return {
-      currentPage: 1
     };
   },
-  props:["total"],
+  props:["total","currentPage"],
   methods: {
     //分页
     handleCurrentChange(val) {

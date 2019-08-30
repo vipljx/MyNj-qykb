@@ -61,7 +61,14 @@
                     </el-select>
                   </td>
                   <td>
-                    <el-input-number v-model="tmpA.num" size="mini" :min="0" :max="10" label="描述文字"></el-input-number>
+                    <el-input-number
+                      v-model="tmpA.num"
+                      size="mini"
+                      :min="0"
+                      :max="tmpA.kzChapterName=='公章'?1:tmpA.kzChapterName=='财务章'?1:tmpA.kzChapterName=='法人章'?1:10000"
+                      label="描述文字"
+                      @change="handleChange(i)"
+                    ></el-input-number>
                   </td>
                   <td>￥{{tmpA.price}}</td>
                 </tr>
@@ -180,6 +187,41 @@ export const API = new APIblkz();
 export default {
   name: "blkzCart",
   data() {
+    var checkRegNo = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("请输入税号"));
+      } else {
+        if (value.length === 15 || value.length === 18) {
+          var addressCode = value.substring(0, 6);
+          // 校验地址码
+          var check = this.checkAddressCode(addressCode);
+          if (!check) {
+            return callback(new Error("请输入正确的纳税人识别号"));
+          }
+          // 校验组织机构代码
+          var orgCode = value.substring(6, 9);
+          check = this.isValidOrgCode(orgCode);
+          if (!check) {
+            return callback(new Error("请输入正确的纳税人识别号"));
+          }
+          callback();
+        } else {
+          return callback(new Error("请输入正确的纳税人识别号"));
+        }
+      }
+    };
+    var checkPhone = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("请输入收件人电话"));
+      } else {
+        const reg = /^1[3456789]\d{9}$/;
+        if (reg.test(value)) {
+          callback();
+        } else {
+          return callback(new Error("请输入正确的手机号"));
+        }
+      }
+    };
     return {
       msgCorp: {},
       msgShop: {},
@@ -189,7 +231,7 @@ export default {
           { required: true, message: "请输入发票抬头", trigger: "blur" }
         ],
         kzBillCompanyRegNo: [
-          { required: true, message: "请输入税号", trigger: "blur" }
+          { required: true, validator: checkRegNo, trigger: "blur" }
         ],
         kzReceiveAddr: [
           { required: true, message: "请输入收件地址", trigger: "blur" }
@@ -198,7 +240,7 @@ export default {
           { required: true, message: "请输入收件人姓名", trigger: "blur" }
         ],
         kzReceiveMob: [
-          { required: true, message: "请输入收件人电话", trigger: "blur" }
+          { required: true, validator: checkPhone, trigger: "blur" }
         ]
       },
       ruleLength: 0,
@@ -242,7 +284,7 @@ export default {
       tmp.kzChapSpecId = tmp.kzChapterSpecInfoList[0].kzChapSpecId;
     }
     this.msgShop = msgShop;
-    this.params.corpName = this.msgCorp.mcompanyName;
+    this.params.corpName = this.msgCorp.mcompanyName?this.msgCorp.mcompanyName:this.msgCorp.mCompanyName;
     this.params.kzCompanyId = this.msgShop.kzCompanyId;
     this.params.kzMId = this.msgCorp.kzMId
       ? this.msgCorp.kzMId
@@ -294,11 +336,91 @@ export default {
     }
   },
   methods: {
+    // 校验组织机构代码
+    isValidOrgCode(value) {
+      if (value != "") {
+        var part1 = value.substring(0, 8);
+        var part2 = value.substring(value.length - 1, 1);
+        var ws = [3, 7, 9, 10, 5, 8, 4, 2];
+        var str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var reg = /^([0-9A-Z]){8}$/;
+        if (!reg.test(part1)) {
+          return true;
+        }
+        var sum = 0;
+        for (var i = 0; i < 8; i++) {
+          sum += str.indexOf(part1.charAt(i)) * ws[i];
+        }
+        var C9 = 11 - (sum % 11);
+        var YC9 = part2 + "";
+        if (C9 == 11) {
+          C9 = "0";
+        } else if (C9 == 10) {
+          C9 = "X";
+        } else {
+          C9 = C9 + "";
+        }
+        return YC9 != C9;
+      }
+    }, 
+    // 校验地址码
+    checkAddressCode(addressCode) {
+      var provinceAndCitys = {
+        11: "北京",
+        12: "天津",
+        13: "河北",
+        14: "山西",
+        15: "内蒙古",
+        21: "辽宁",
+        22: "吉林",
+        23: "黑龙江",
+        31: "上海",
+        32: "江苏",
+        33: "浙江",
+        34: "安徽",
+        35: "福建",
+        36: "江西",
+        37: "山东",
+        41: "河南",
+        42: "湖北",
+        43: "湖南",
+        44: "广东",
+        45: "广西",
+        46: "海南",
+        50: "重庆",
+        51: "四川",
+        52: "贵州",
+        53: "云南",
+        54: "西藏",
+        61: "陕西",
+        62: "甘肃",
+        63: "青海",
+        64: "宁夏",
+        65: "新疆",
+        71: "台湾",
+        81: "香港",
+        82: "澳门",
+        91: "国外"
+      };
+      var check = /^[1-9]\d{5}$/.test(addressCode);
+      if (!check) return false;
+      if (provinceAndCitys[parseInt(addressCode.substring(0, 2))]) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
     //选择印章材质
     selectChange(i, obj) {
       // console.log(obj);
       this.msgShop.kzChapterInfoList[i].price = obj.kzChapSpecPrice;
       this.msgShop.kzChapterInfoList[i].kzChapSpecId = obj.kzChapSpecId;
+    },
+    //校验章数量
+    handleChange(i) {
+      this.msgShop.kzChapterInfoList[i];
+      console.log(this.msgShop.kzChapterInfoList[i]);
     },
     //上一步
     prev() {
@@ -370,9 +492,9 @@ export default {
     submit() {
       if (this.count == 0) {
         this.$notify({
-          title: '警告',
-          message: '刻章总数不能为空！',
-          type: 'warning'
+          title: "警告",
+          message: "刻章总数不能为空！",
+          type: "warning"
         });
         return;
       }
@@ -399,7 +521,7 @@ export default {
           if (res.code === 0) {
             this.$notify({
               title: "提示",
-              message: "订单提交成功",//账户申请提交成功//提交成功
+              message: "订单提交成功", //账户申请提交成功//提交成功
               type: "success"
             });
             setTimeout(() => {
@@ -730,4 +852,3 @@ export default {
   color: #999999;
 }
 </style>
-

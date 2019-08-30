@@ -241,11 +241,13 @@ export default {
     getBkOrderDetail() {
       API.getBkOrderDetail({
         bkMId: this.params.bkMId,
+        bkBaseMId:this.msgBank.bkBaseMId,
         Authorization: this.params.Authorization
       })
         .then(res => {
           console.log(res);
           if (res.code === 0) {
+            this.msgBank = res.data.baseInfo;
             this.bk = res.data.bk;
             this.process3[0].name = this.bk.bkSubmitName;
               this.process3[0].date = this.bk.bkSubmitTime

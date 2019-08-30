@@ -115,7 +115,7 @@
                       </li>
                       <li>
                         <el-form-item label="联系电话">
-                          <el-input placeholder="请输入法人联系电话"></el-input>
+                          <el-input placeholder="" :value="phone" disabled></el-input>
                         </el-form-item>
                       </li>
                     </ul>
@@ -314,9 +314,13 @@ export default {
   created() {
     this.init();
   },
-  mounted() {},
+  computed: {
+    phone(){
+      return this.$store.state.phone
+    }
+  },
   watch: {
-    $route(to, from) {
+    $route() {
       this.init();
     }
   },
@@ -371,6 +375,7 @@ export default {
       this.fullscreenLoading = true;
       API.swApi_save({
         bkMId: this.params.bkMId,
+        swMId: this.params.swMId,
         Authorization: this.params.Authorization
       })
         .then(res => {
@@ -404,7 +409,7 @@ export default {
     },
     //生成二维码
     qrcode(url) {
-      let qrcode = new QRCode("qrcode", {
+      new QRCode("qrcode", {
         width: 132,
         height: 132,
         text: url, // 二维码地址

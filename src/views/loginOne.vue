@@ -36,29 +36,35 @@ export default {
   },
   created() {
     //初始化token
-    //this.getToken();
-    //初始化二维码
-    this.getQrCode();
+    this.getToken();
   },
   methods: {
     ...mapMutations([
+      "addToken",
       "addUser", // 将 `this.addUser()` 映射为 `this.$store.commit('addUser')`
       "updateFlag"
     ]),
     //获取token
-    // getToken() {
-    //   API1.getToken({
-    //     Authorization: this.$store.state.token //Token
-    //   })
-    //     .then(res => {
-    //       //console.log(res);
-    //     })
-    //     .catch(err => {
-    //       console.log(err);
-    //     });
-    // },
+    getToken() {
+      API1.getToken({
+        passWord: "admin",
+        userAccount: "admin"
+      })
+        .then(res => {
+          console.log(res);
+          if (res.code === 0) {
+            this.addToken(res.data);
+            //初始化二维码
+            this.getQrCode();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
     //获取二维码
     getQrCode() {
+      //console.log(this.$store.state.token);
       API1.getQrCode({
         Authorization: this.$store.state.token //Token
       })
@@ -66,7 +72,6 @@ export default {
           //console.log(res);
           if (res.code === 0) {
             this.qrcode(res.data.qrCode, () => {
-              console.log(1);
               this.timer = setInterval(() => {
                 this.getUserInfo(res.data.custom);
               }, 3000);

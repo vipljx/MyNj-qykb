@@ -43,7 +43,7 @@
         </li>
       </ul>
       <div class="page" v-if="list.length!==0">
-        <v-Page @parentPage="onPage" :total="total"></v-Page>
+        <v-Page @parentPage="onPage" :total="total" :currentPage="params.pageNo"></v-Page>
       </div>
       <div class="height10"></div>
     </div>
@@ -56,7 +56,7 @@ import cate from "_c/cate";
 import none from "_c/none";
 import page from "_c/page";
 //引入全局变量
-import {storage} from "@/api/resource";
+import { storage } from "@/api/resource";
 
 //调用接口
 import { APIgsdj } from "@/api/index";
@@ -90,7 +90,6 @@ export default {
     this.params.Authorization = this.$store.state.token;
   },
   methods: {
-    
     //获取办理进度数据
     getMainProcessData() {
       API.getMainProcessData(this.params)
@@ -118,7 +117,7 @@ export default {
     },
     //跳转到工商登记的办理进度
     jumpA(i) {
-      storage.set("msgCorp",this.list[i])
+      storage.set("msgCorp", this.list[i]);
       this.$router.push({
         path: "gsdjMsg"
       });

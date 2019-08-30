@@ -6,7 +6,7 @@ export class APImynj{
     }
     //获取token
     getToken(param){
-        return fetchGet('/api/MyNjQrApi/getToken',param);
+        return fetchPost('/auth/getPeopleToken',param);
     }
     //获取二维码
     getQrCode(param) {

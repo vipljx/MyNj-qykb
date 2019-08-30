@@ -81,7 +81,7 @@
                     <el-form-item label="注册资本">
                       <el-input
                         placeholder
-                        :value="msgCorp.bkCompanyCapi?msgCorp.bkCompanyCapi:main.mcompanyCapi"
+                        :value="msgCorp.bkCompanyCapi?msgCorp.bkCompanyCapi+'万元':main.mcompanyCapi+'万元'"
                         disabled
                       ></el-input>
                     </el-form-item>
@@ -176,6 +176,18 @@ export const API = new APIyhkh();
 export default {
   name: "yhywApply",
   data() {
+    var checkPhone = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("请输入开户联系人电话"));
+      } else {
+        const reg = /^1[3456789]\d{9}$/;
+        if (reg.test(value)) {
+          callback();
+        } else {
+          return callback(new Error("请输入正确的手机号"));
+        }
+      }
+    };
     return {
       process3: [
         {
@@ -218,7 +230,7 @@ export default {
       main: {},
       rules: {
         bkMob: [
-          { required: true, message: "请输入开户联系人电话", trigger: "blur" }
+          { required: true, validator: checkPhone, trigger: "blur" }
         ]
       },
       params: {
@@ -245,6 +257,7 @@ export default {
     //初始化参数
     this.params.bkMId = this.msgCorp.bkMId;
     //this.params.bkMId = "200d018a80e15724f68925b46388293f";
+    this.params.bkMob=this.$store.state.phone;
     this.params.bkBaseMId = this.msgBank.bkBaseMId;
     this.params.createUser = this.$store.state.userName;
     this.params.createUserMob = this.$store.state.phone;
@@ -258,6 +271,7 @@ export default {
     getBkOrderDetail() {
       API.getBkOrderDetail({
         bkMId: this.params.bkMId,
+        bkBaseMId:this.msgBank.bkBaseMId,
         Authorization: this.params.Authorization
       })
         .then(res => {

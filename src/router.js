@@ -1,30 +1,31 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Store from "./store";
+const routerLazyLoad = filename => () => import(
+  /* webpackChunkName: "[request]" */`./views/${filename}.vue`
+)
 
 Vue.use(Router);
 
 const router = new Router({
   mode: 'history',
-  base: "/dist",
+  base: "/",
   routes: [
     {
       path: '*',
       name: "notFound",
-      component: () => import("./views/notFound.vue")
+      component: routerLazyLoad('notFound')
     },
     {
       path: "/",
       name: "loginOne",
-      component: () =>
-        import("./views/loginOne.vue")
+      component: routerLazyLoad('loginOne')
 
     },
     {
       path: "/loginTwo",
       name: "loginTwo",
-      component: () =>
-        import("./views/loginTwo.vue")
+      component: routerLazyLoad('loginTwo')
 
     },
     {
@@ -34,7 +35,6 @@ const router = new Router({
         import("./views/gsdj/list.vue")
 
     },
-
     {
       path: "/gsdjMsg",
       name: "gsdjMsg",
@@ -108,7 +108,6 @@ const router = new Router({
 const permitList = ["loginOne", "loginTwo"];//白名单
 router.beforeEach((to, from, next) => {
   //console.log(Store.state)
-
   if (Store.state.isFlag) {
     if (permitList.indexOf(to.name) == -1) {
       next()

@@ -19,7 +19,7 @@
               </div>
               <div class="msg-top-goods">
                 <img src="../../assets/images/web/blkz-tp3.png" alt />
-                好评: {{msg.kzOrderCount}}
+                好评: {{msg.kzEvaCount}}
               </div>
             </div>
           </div>

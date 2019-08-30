@@ -31,7 +31,7 @@
                 :class="{active:dropActive}"
               >
                 <span class="el-dropdown-link">
-                  银行
+                  {{bankActivedName}}
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown" class="list-bank-dropdown">
@@ -71,7 +71,7 @@
             </li>
           </ul>
           <div class="page" v-if="list.length!==0">
-            <v-Page @parentPage="onPage" :total="total"></v-Page>
+            <v-Page @parentPage="onPage" :total="total" :currentPage="params.pageNo"></v-Page>
           </div>
           <div class="height10"></div>
         </div>
@@ -99,6 +99,7 @@ export default {
       areaList: [],
       screenActived: 0,
       bankActived: 0,
+      bankActivedName: "银行",
       total: 0,
       screenList: [
         {
@@ -187,6 +188,7 @@ export default {
     //筛选属性
     onScreen(i) {
       console.log(this.screenList);
+      this.params.pageNo = 1;
       if (i === 0) {
         this.params.saleOrder = false;
         this.params.talkOrder = false;
@@ -205,14 +207,18 @@ export default {
     //筛选银行
     onBank(command) {
       console.log(command);
+
       this.screenActived = this.screenList.length;
       this.bankActived = command;
       this.params.bkType = this.bankList[command].dictId;
+      this.bankActivedName = this.bankList[command].dictName;
 
+      this.params.pageNo = 1;
       this.getBkCompanyData();
     },
     //筛选地区
     onArea(addrId) {
+      this.params.pageNo = 1;
       this.params.bkArea = addrId;
       this.getBkCompanyData();
     },
@@ -282,6 +288,7 @@ export default {
       }
     }
     .list-bank {
+      width: 7.048%;
       .el-dropdown {
         color: #999999;
         width: 100%;
@@ -331,7 +338,7 @@ export default {
         .list-bottom-li-left {
           width: 39.166%;
           height: 10.1rem;
-          img{
+          img {
             height: 100%;
           }
         }
@@ -407,6 +414,9 @@ export default {
     background: none;
     color: #ffbe4d;
   }
+}
+.el-dropdown-menu--small .el-dropdown-menu__item {
+  padding: 0 20px;
 }
 .list-bank-dropdown.el-popper[x-placement^="bottom"] {
   margin-top: 0;

@@ -7,7 +7,7 @@ import * as mutations from './mutations'
 Vue.use(Vuex);
 
 const state= localStorage.getItem('state') ? JSON.parse(localStorage.getItem('state')) :{
-  token:"1",
+  token:"",
   isFlag:false,
   sfCode:"",
   phone:"",

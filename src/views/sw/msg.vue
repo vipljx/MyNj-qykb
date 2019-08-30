@@ -73,7 +73,7 @@
                     <ul class="msg-middle-li-ul">
                       <li>姓名：{{mainInfo.mfrName}}</li>
                       <li>证件号：{{mainInfo.mfrZjCode}}</li>
-                      <li>联系电话：暂无</li>
+                      <li>联系电话：{{phone}}</li>
                     </ul>
                     <div class="msg-bottom-bt" v-if="false">b.财务负责人</div>
                     <ul class="msg-middle-li-ul" v-if="false">
@@ -104,9 +104,9 @@
                     </div>
                     <ul class="msg-middle-li-ul">
                       <li>账户性质：一般存款账户</li>
-                      <li>银行行别：{{swMainInfo.dictName}}</li>
-                      <li>账户名称：{{msgCorp.bkCompanyName?msgCorp.bkCompanyName:msgCorp.mcompanyName}}</li>
-                      <li>开户日期：{{swMainInfo.createTime}}</li>
+                      <li>银行行别：{{ swMainInfo.dictName }}</li>
+                      <li>账户名称：{{ msgCorp.bkCompanyName ? msgCorp.bkCompanyName : msgCorp.mcompanyName }}</li>
+                      <li>开户日期：{{ swMainInfo.createTime }}</li>
                       <li>币种：人民币</li>
                     </ul>
                   </li>
@@ -115,19 +115,20 @@
             </div>
             <div class="height10"></div>
           </li>
-          <li class="apply-li">
+          <li class="apply-li" v-if="false">
             <div class="msg-middle yhyw-bj">
               <div class="yhyw-cont">
                 <ul class="msg-middle-ul">
                   <li class="msg-middle-li">
                     <div class="msg-bottom-cate">
-                      <i></i>税务办理审核通知书
+                      <i></i>
+                      税务办理审核通知书
                     </div>
                     <ul class="msg-middle-li-ul2">
-                      <li v-for="(tmp,i) in swMainInfo.swInfoDetialList" :key="tmp.swDId">
-                        {{i+1}}.{{tmp.wsmc}}
+                      <li v-for="(tmp, i) in swMainInfo.swInfoDetialList" :key="tmp.swDId">
+                        {{ i + 1 }}.{{ tmp.wsmc }}
                         <img src="../../assets/images/web/sw-tp1.png" alt />
-                        <span @click="download(i)">下载</span>
+                        <span @click="download()">下载</span>
                       </li>
                     </ul>
                   </li>
@@ -200,6 +201,11 @@ export default {
   created() {
     this.init();
   },
+  computed: {
+    phone() {
+      return this.$store.state.phone;
+    }
+  },
   watch: {
     steps: function(val) {
       for (var i = 0; i < this.process4.length; i++) {
@@ -210,7 +216,7 @@ export default {
         }
       }
     },
-    $route(to, from) {
+    $route() {
       this.init();
     }
   },
@@ -268,7 +274,7 @@ export default {
         });
     },
     //下载
-    download(i) {
+    download() {
       window.location.href = swDownloadUrl;
     },
     //时间戳转为日期格式
@@ -636,5 +642,3 @@ export default {
   font-size: 1.6rem;
 }
 </style>
-
-

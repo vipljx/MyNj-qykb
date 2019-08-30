@@ -55,9 +55,9 @@
                 <i></i>刻章店铺
               </div>
               <ul class="msg-top-ul">
-                <li>店名：{{msgShop.kzCompanyName}}</li>
-                <li>地址：{{msgShop.provinceName+msgShop.cityName+msgShop.areaName+msgShop.kzDzDetail}}</li>
-                <li>电话：{{msgShop.kzMobPhone}}</li>
+                <li>店名：{{companyInfo.kzCompanyName?companyInfo.kzCompanyName:msgShop.kzCompanyName}}</li>
+                <li>地址：{{companyInfo.provinceName?companyInfo.provinceName:msgShop.provinceName}}{{companyInfo.cityName?companyInfo.cityName:msgShop.cityName}}{{companyInfo.areaName?companyInfo.areaName:msgShop.areaName}}{{companyInfo.kzDzDetail?companyInfo.kzDzDetail:msgShop.kzDzDetail}}</li>
+                <li>电话：{{companyInfo.kzMobPhone?companyInfo.kzMobPhone:msgShop.kzMobPhone}}</li>
               </ul>
             </li>
           </ul>
@@ -129,14 +129,35 @@
                 <div class="msg-midddle-cate">收件方式</div>
                 <div class="cartC-invoice">
                   <el-radio-group v-model="orderMainInfo.kzReceiveModel">
-                    <el-radio-button label="0" :disabled="orderMainInfo.kzReceiveModel==1">自取</el-radio-button>
-                    <el-radio-button label="1" :disabled="orderMainInfo.kzReceiveModel==0">邮寄￥10</el-radio-button>
+                    <el-radio-button label="0" :disabled="orderMainInfo.kzReceiveModel == 1">自取</el-radio-button>
+                    <el-radio-button label="1" :disabled="orderMainInfo.kzReceiveModel == 0">邮寄￥10</el-radio-button>
                   </el-radio-group>
                   <div class="height10"></div>
                   <ul class="msg-top-ul">
-                    <li>收件地址：{{orderMainInfo.kzReceiveModel==0?"暂无":orderMainInfo.kzReceiveAddr}}</li>
-                    <li>收件人：{{orderMainInfo.kzReceiveModel==0?"暂无":orderMainInfo.kzReceiveUser}}</li>
-                    <li>联系电话：{{orderMainInfo.kzReceiveModel==0?"暂无":orderMainInfo.kzReceiveMob}}</li>
+                    <li>
+                      收件地址：
+                      {{
+                      orderMainInfo.kzReceiveModel == 0
+                      ? "暂无"
+                      : orderMainInfo.kzReceiveAddr
+                      }}
+                    </li>
+                    <li>
+                      收件人：
+                      {{
+                      orderMainInfo.kzReceiveModel == 0
+                      ? "暂无"
+                      : orderMainInfo.kzReceiveUser
+                      }}
+                    </li>
+                    <li>
+                      联系电话：
+                      {{
+                      orderMainInfo.kzReceiveModel == 0
+                      ? "暂无"
+                      : orderMainInfo.kzReceiveMob
+                      }}
+                    </li>
                   </ul>
                 </div>
               </li>
@@ -145,8 +166,8 @@
                 <div class="msg-midddle-cate">物流信息</div>
                 <div class="cartC-invoice">
                   <ul class="msg-top-ul">
-                    <li>快递公司：{{orderMainInfo.kzActSendKdName}}</li>
-                    <li>物流单号：{{orderMainInfo.kzActSendNum}}</li>
+                    <li>快递公司：{{ orderMainInfo.kzActSendKdName }}</li>
+                    <li>物流单号：{{ orderMainInfo.kzActSendNum }}</li>
                     <li class="orange" @click="logistics">查看物流信息 ></li>
                   </ul>
                 </div>
@@ -175,15 +196,15 @@
           </ul>
         </div>
       </div>-->
-      <div class="height10" v-show="isShow4 || steps==6"></div>
-      <div class="cartE cart-bj" v-show="isShow4 || steps==6">
+      <div class="height10" v-show="isShow4 || steps == 6"></div>
+      <div class="cartE cart-bj" v-show="isShow4 || steps == 6">
         <div class="cart-cont">
           <div class="msg-midddle-cate">评价</div>
 
-          <el-rate v-model="params2.num" :disabled="steps==6"></el-rate>
-          <div class="evaluate" v-show="steps==6">
-            <p>{{orderMainInfo.kzActEvalDesc}}</p>
-            <div>{{orderMainInfo.kzActEvalDate}}</div>
+          <el-rate v-model="params2.num" :disabled="steps == 6"></el-rate>
+          <div class="evaluate" v-show="steps == 6">
+            <p>{{ orderMainInfo.kzActEvalDesc }}</p>
+            <div>{{ orderMainInfo.kzActEvalDate }}</div>
           </div>
           <div class="height10"></div>
           <el-input
@@ -191,20 +212,23 @@
             v-model="params2.kzActEvalDesc"
             :rows="3"
             placeholder="快来评价一下吧~"
-            v-show="steps!=6"
+            v-show="steps != 6"
           ></el-input>
         </div>
       </div>
-      <div class="height10" v-if="steps!==1 && steps!==6 && steps!==3"></div>
-      <div class="cartF cart-bj" v-if="steps!==1 && steps!==6 && steps!==3">
-        <div v-if="steps==2">
+      <div class="height10" v-if="steps !== 1 && steps !== 6 && steps !== 3"></div>
+      <div class="cartF cart-bj" v-if="steps !== 1 && steps !== 6 && steps !== 3">
+        <div v-if="steps == 2">
           <button class="btn1" @click="prev">上一步</button>
           <button class="btn2" @click="isShow1 = true">立即支付</button>
         </div>
 
-        <button class="btn2" @click="isShow3 = true" v-if="steps==4">确认收货</button>
-
-        <button class="btn2" @click="evaluate" v-if="steps==5 && isHiden3">立即评价</button>
+        <button class="btn2" @click="isShow3 = true" v-if="steps == 4">
+          确认收货
+        </button>
+        <button class="btn2" @click="evaluate" v-if="steps == 5 && isHiden3">
+          立即评价
+        </button>
         <div v-if="isHiden4">
           <button class="btn1" @click="cancel">取消</button>
           <button class="btn2" @click="confirm2">确认提交</button>
@@ -221,11 +245,17 @@
           <el-radio-button label="1">微信</el-radio-button>
         </el-radio-group>
         <div class="height20"></div>
-        <div class="cartG-title">{{tabPosition==0?"请使用手机支付宝扫码付款":"请使用手机微信扫码付款"}}</div>
+        <div class="cartG-title">
+          {{
+            tabPosition === 0
+              ? "请使用手机支付宝扫码付款"
+              : "请使用手机微信扫码付款"
+          }}
+        </div>
         <div class="height10"></div>
         <ul class="cartG-img">
           <li>
-            <img :src="tabPosition==0?companyInfo.kzPayImg:companyInfo.kzWechatImg" alt />
+            <img :src="tabPosition===0?companyInfo.kzPayImg:companyInfo.kzWechatImg" alt />
           </li>
           <li v-if="isShow5">
             <img :src="imageUrl" alt />
@@ -233,7 +263,7 @@
         </ul>
         <div class="clear"></div>
         <div class="height10"></div>
-        <div class="cartG-btn">
+        <!-- <div class="cartG-btn">
           <el-upload
             class="upload-demo"
             :action="url"
@@ -245,9 +275,14 @@
           <div v-if="isShow5">
             <button @click="sure">确定</button>
           </div>
+        </div>-->
+        <div class="cartG-btn">
+          <div>
+            <button @click="sure">确定</button>
+          </div>
         </div>
-        <div class="height10"></div>
-        <div class="cartG-note">付款成功后，请将付款成功界面截图上传至本系统</div>
+        <div class="height10" v-if="false"></div>
+        <div class="cartG-note" v-if="false">付款成功后，请将付款成功界面截图上传至本系统</div>
         <div class="height20"></div>
       </el-dialog>
     </div>
@@ -257,13 +292,13 @@
       <el-dialog title="物流信息" :visible.sync="isShow2" width="41%">
         <table cellspacing="0" cellpadding="0" class="cartH-table">
           <thead>
-            <th>快递公司：{{orderMainInfo.kzActSendKdName}}</th>
+            <th>快递公司：{{ orderMainInfo.kzActSendKdName }}</th>
             <th></th>
-            <th>订单编号：{{orderMainInfo.kzActSendNum}}</th>
+            <th>订单编号：{{ orderMainInfo.kzActSendNum }}</th>
           </thead>
           <tbody>
-            <tr v-for="(tmp,i) in LogisticsList" :key="i">
-              <td>{{tmp.AcceptTime}}</td>
+            <tr v-for="(tmp, i) in LogisticsList" :key="i">
+              <td>{{ tmp.AcceptTime }}</td>
               <td>
                 <i></i>
                 <div class="line" v-if="i!=LogisticsList.length-1"></div>
@@ -398,8 +433,8 @@ export default {
     "v-Cate": cate
   },
   computed: {
-    phone(){
-      return this.$store.state.phone
+    phone() {
+      return this.$store.state.phone;
     },
     count: function() {
       var cont = 0;
@@ -416,7 +451,7 @@ export default {
     }
   },
   watch: {
-    $route(to, from) {
+    $route() {
       this.init();
     },
     steps: function(val) {
@@ -578,7 +613,7 @@ export default {
                 message: "暂无物流信息！",
                 type: "warning"
               });
-              return
+              return;
             } else {
               this.isShow2 = true;
             }

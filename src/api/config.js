@@ -10,7 +10,7 @@ export default {
     /**
      * @description api请求基础路径
      */
-    baseUrl: process.env.NODE_ENV === 'development' ? "http://49.234.39.34:9093" : "http://218.94.87.202:9091",
+    baseUrl: process.env.NODE_ENV === 'development' ? "http://192.168.101.39:9093" : "http://218.94.87.202:9091",
     //baseUrl: process.env.NODE_ENV === 'development' ? "http://192.168.101.39:9093" : "http://49.234.39.34:9093",
     /**
      * @description 默认打开的首页的路由name值，默认为home
