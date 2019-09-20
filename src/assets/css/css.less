@@ -1,0 +1,61 @@
+@color3:#333;
+@color15:#fff;
+.restMP(){
+    margin: 0;
+    padding: 0;
+}
+.listStyle(){
+    list-style: none;
+}
+.loop(@n,@i:1) when (@i=<@n){
+    h@{i}{
+        .restMP();
+        .listStyle();
+    }
+    .loop(@n,(@i+1));
+}
+html{
+    font-family: "PingFang", Helvetica, STHeiTi, Arial, sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    font-size: 10px;
+    body{
+        font-size: 1.6rem;
+        color:@color3;
+        background:@color15;
+        .restMP();
+        .loop(6);
+        p{
+            .restMP();
+        }
+        ul{
+            .restMP();
+            .listStyle();
+        }
+        ol{
+            .restMP();
+            .listStyle();
+        }
+        dl{
+            .restMP();
+            dd{
+                .restMP();
+            }
+        }
+        a{
+            color:@color3;
+            text-decoration:none;
+            &:hover{
+                color:@color3;
+            }
+        }
+        input{
+            outline:none;
+            .restMP();
+        }
+        img{
+            width: 100%;
+            vertical-align:middle;
+        }
+    }
+}

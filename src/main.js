@@ -9,7 +9,7 @@ import router from "./router";
 import store from "./store/index";
 
 //引入css
-import "./assets/css/css.css" 
+import "./assets/css/css.less" 
 
 //引入axios，并加到原型链中
 import axios from "axios";
@@ -36,6 +36,8 @@ router.beforeEach((to, from, next) => {
     sessionStorage.setItem("menu",3)
   }else if(to.name.indexOf("sw")!==-1){
     sessionStorage.setItem("menu",4)
+  }else{
+    sessionStorage.removeItem("menu",4)
   }
   next();
 })
